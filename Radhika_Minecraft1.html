@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Radhika's Minecraft</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="home.css" />
+  <link rel="stylesheet" href="character-select.css" />
+  <link rel="stylesheet" href="meet-radhika.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      height: 100%;
+      font-family: 'Press Start 2P', cursive;
+    }
+    .screen {
+      width: 100vw;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 2px 2px #000;
+      padding: 20px;
+    }
+    #meet-radhika {
+      display: none;
+    }
+    #final-scene {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: url('./images/final-scene.jpg') no-repeat center center;
+      background-size: 100% 100%; /* Ensures full coverage without black bars */
+    }
+    .characters img {
+      width: 150px;
+      height: auto;
+      cursor: pointer;
+      border: 3px solid white;
+      transition: 0.3s;
+    }
+    .characters img:hover {
+      border-color: yellow;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Home Screen -->
+  <div class="screen" id="home">
+    <button class="home-start-button" onclick="goToCharacterSelect()">Start</button>
+  </div>
+
+  <!-- Character Select -->
+  <div class="screen" id="character-select">
+    <h2 class="character-select-heading">Choose Your Character</h2>
+    <div class="button-container">
+      <button onclick="chooseCharacter('character1')">Character 1</button>
+      <button onclick="chooseCharacter('character2')">Character 2</button>
+    </div>
+    <div class="characters">
+      <img src="./images/character11.jpg" alt="Character 1" onclick="chooseCharacter('character1')">
+      <img src="./images/character21.jpg" alt="Character 2" onclick="chooseCharacter('character2')">
+    </div>
+  </div>
+
+  <!-- Meet Radhika -->
+  <div class="screen" id="meet-radhika">
+    <div class="meet-heading">Meet Radhika!</div>
+    <div class="half-image">
+      <img src="./images/character1.jpg" alt="Big Character Image">
+    </div>
+    <div class="half-image">
+      <img src="./images/character2.jpg" alt="Side Character Image">
+    </div>
+    <div class="center-button">
+      <button onclick="goToFinalScene()">Create New World</button>
+    </div>
+  </div>
+
+  <!-- Final Scene -->
+  <div id="final-scene"></div>
+
+  <script>
+    function goToCharacterSelect() {
+      document.getElementById('home').style.display = 'none';
+      document.getElementById('character-select').style.display = 'flex';
+    }
+
+    function chooseCharacter(character) {
+      document.getElementById('character-select').style.display = 'none';
+      document.getElementById('meet-radhika').style.display = 'flex';
+    }
+
+    function goToFinalScene() {
+      document.getElementById('meet-radhika').style.display = 'none';
+      document.getElementById('final-scene').style.display = 'block';
+
+      // Redirect to a blank new page after 3 seconds
+      setTimeout(() => {
+        window.location.href = 'the-end.html';
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>

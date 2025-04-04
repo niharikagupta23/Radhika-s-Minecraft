@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minecraft Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="the-end.css" />
+  <style>
+    .header-image {
+      display: block;
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="./images/header.jpg" alt="Minecraft Tic-Tac-Toe" class="header-image">
+
+  <div class="container">
+    <div class="side-container">
+      <img id="lose-gif" class="side-gif" src="./images/lose.gif" alt="Lose GIF">
+      <img id="draw-gif" class="side-gif" src="./images/lose.gif" alt="Draw GIF">
+    </div>
+
+    <div class="game-area">
+      <h1 id="status">Survive Minecraft AI</h1>
+      <div class="board" id="board"></div>
+      <button id="restart" onclick="nextGame()">Next Game</button>
+    </div>
+
+    <div class="side-container">
+      <img id="win-gif" class="side-gif" src="./images/win.gif" alt="Win GIF">
+    </div>
+  </div>
+
+  <script>
+    let board, user = 'X', ai = 'O', gameNum = 1;
+
+    const icons = {
+      'X': './images/sword.jpg',
+      'O': './images/pickaxe.jpg'
+    };
+
+    function initBoard() {
+      board = Array(9).fill('');
+      const boardEl = document.getElementById('board');
+      boardEl.innerHTML = '';
+      document.getElementById('status').textContent = `Survive Minecraft AI`;
+      
+      const restartBtn = document.getElementById('restart');
+      restartBtn.style.display = 'none';
+
+      ['win-gif', 'lose-gif', 'draw-gif'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+      });
+
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.addEventListener('click', handleClick);
+        boardEl.appendChild(cell);
+      }
+    }
+
+    function handleClick(e) {
+      const idx = +e.target.dataset.index;
+      if (board[idx] !== '') return;
+
+      board[idx] = user;
+      renderSymbol(e.target, user);
+      e.target.classList.add('taken');
+
+      if (checkWin(user)) return endGame("You Won with the Sword!", true);
+      if (isDraw()) return endGame("It's a draw!", false, false, true);
+
+      setTimeout(() => {
+        if (gameNum <= 2) smartAIMove(); else dumbAIMove();
+      }, 300);
+    }
+
+    function renderSymbol(cell, player) {
+      const img = document.createElement('img');
+      img.src = icons[player];
+      img.classList.add('icon');
+      cell.appendChild(img);
+    }
+
+    function smartAIMove() {
+      const move = minimax(board, ai).index;
+      makeAIMove(move);
+    }
+
+    function dumbAIMove() {
+      const empty = board.map((v, i) => v === '' ? i : null).filter(i => i !== null);
+      const move = empty[Math.floor(Math.random() * empty.length)];
+      makeAIMove(move);
+    }
+
+    function makeAIMove(move) {
+      board[move] = ai;
+      const cell = document.querySelector(`.cell[data-index="${move}"]`);
+      renderSymbol(cell, ai);
+      cell.classList.add('taken');
+
+      if (checkWin(ai)) return endGame("The AI mined your victory!", false, true);
+      if (isDraw()) return endGame("It's a draw!", false, false, true);
+    }
+
+    function checkWin(player) {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return wins.some(comb => comb.every(i => board[i] === player));
+    }
+
+    function isDraw() {
+      return board.every(cell => cell !== '');
+    }
+
+    function endGame(message, userWon, aiWon = false, draw = false) {
+      document.getElementById('status').textContent = message;
+      document.querySelectorAll('.cell').forEach(c => c.classList.add('taken'));
+      const restartBtn = document.getElementById('restart');
+
+      if (gameNum < 3) {
+        restartBtn.textContent = "Next Game";
+      } else {
+        restartBtn.textContent = "Finish the Game";
+      }
+
+      restartBtn.style.display = 'block';
+
+      if (userWon) document.getElementById('win-gif').style.display = 'block';
+      else if (aiWon) document.getElementById('lose-gif').style.display = 'block';
+      else if (draw) document.getElementById('draw-gif').style.display = 'block';
+    }
+
+    function nextGame() {
+      gameNum++;
+      if (gameNum > 3) {
+        window.location.href = "level18.html";  // Redirect to full-screen image
+      } else {
+        initBoard();
+      }
+    }
+
+    function minimax(newBoard, player) {
+      const availSpots = newBoard.map((v, i) => v === '' ? i : null).filter(i => i !== null);
+
+      if (checkWin(user)) return { score: -10 };
+      if (checkWin(ai)) return { score: 10 };
+      if (availSpots.length === 0) return { score: 0 };
+
+      const moves = [];
+      for (let i = 0; i < availSpots.length; i++) {
+        const idx = availSpots[i];
+        const move = {};
+        move.index = idx;
+        newBoard[idx] = player;
+
+        if (player === ai) {
+          move.score = minimax(newBoard, user).score;
+        } else {
+          move.score = minimax(newBoard, ai).score;
+        }
+
+        newBoard[idx] = '';
+        moves.push(move);
+      }
+
+      return moves.reduce((bestMove, move) => 
+        (player === ai ? move.score > bestMove.score : move.score < bestMove.score) ? move : bestMove
+      );
+    }
+
+    initBoard();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+/* home.css */
+
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body, html {
+    height: 100%;
+    font-family: 'Press Start 2P', cursive; /* Minecraft-style font */
+    background-color: black;
+  }
+  
+  /* Home Screen Styling */
+  #home {
+    width: 100vw;
+    height: 100vh;
+    background-image: url('./images/minecraft-bg.jpg'); /* Background image */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px #000; /* Adds a shadow for better readability */
+  }
+  
+  /* Start Button */
+  .home-start-button {
+    font-size: 1.5em;
+    font-family: 'Press Start 2P', cursive; /* Applied the same font */
+    padding: 15px 30px;
+    background: #91b54d; /* Minecraft green */
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-top: calc(80px + 10cm); /* Moves the button 5cm lower */
+    transition: 0.3s;
+  }
+  
+  .home-start-button:hover {
+    background: #76963c; /* Darker green on hover */
+    transform: scale(1.1);
+  }
+  
